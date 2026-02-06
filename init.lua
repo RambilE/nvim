@@ -22,7 +22,6 @@ local add = MiniDeps.add
 
 -- plugins {{{
 
-    add({source = "catppuccin/nvim" })
     add({source = "nvim-lualine/lualine.nvim"})
     add({source = "stevearc/oil.nvim",
          depends = {"nvim-mini/mini.icons"}})
@@ -36,76 +35,117 @@ local add = MiniDeps.add
     add({source = "hrsh7th/cmp-nvim-lsp"})
     add({source = "hrsh7th/cmp-path"})
     add({source = "hrsh7th/cmp-buffer"})
+    add({source = "sphamba/smear-cursor.nvim"})
+    add({source = "rachartier/tiny-glimmer.nvim"})
+    add({source = "VidocqH/auto-indent.nvim"})
+    add({source = "mcauley-penney/visual-whitespace.nvim"})
+    add({source = "folke/twilight.nvim"})
 
     require("mason").setup()
     require("mason-lspconfig").setup()
-    require("mini.indentscope").setup()
+    require("mini.indentscope").setup({
+        symbol = ""
+    })
     require("mini.icons").setup()
     require("mini.snippets").setup()
     require("mini.pairs").setup()
     require("mini.starter").setup()
+    require("mini.comment").setup()
+    require("mini.notify").setup()
+    require('smear_cursor').enabled = true
+    require('smear_cursor').setup({
+        legacy_computing_symbols_support = true,
+        distance_stop_animating_vertical_bar = 0.1
+    })
+    require("tiny-glimmer").setup({autoreload = true})
 
 -- }}}
+
+-- -- dotnet (fold and gcc to disable fully) {{{
+--
+--     add({source = "GustavEikaas/easy-dotnet.nvim"})
+--     add({source = "nvim-lua/plenary.nvim"})
+--     add({source = "nvim-telescope/telescope.nvim"})
+--     add({source = "mfussenegger/nvim-dap"})
+--     local dap = require "dap"
+--
+--     require("easy-dotnet").setup()
+--
+--     vim.keymap.set("n", "<leader>rp", require("easy-dotnet").run)
+--     vim.keymap.set("n", "<leader>n", require("easy-dotnet").new)
+--
+--     vim.keymap.set("n", "<F5>", dap.continue, { desc = "Start/continue debugging" })
+--     vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Step over" })
+--     vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Step into" })
+--     vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Step out" })
+--     vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
+--     vim.keymap.set("n", "<leader>dO", dap.step_over, { desc = "Step over (alt)" })
+--     vim.keymap.set("n", "<leader>dC", dap.run_to_cursor, { desc = "Run to cursor" })
+--     vim.keymap.set("n", "<leader>dr", dap.repl.toggle, { desc = "Toggle DAP REPL" })
+--     vim.keymap.set("n", "<leader>dj", dap.down, { desc = "Go down stack frame" })
+--     vim.keymap.set("n", "<leader>dk", dap.up, { desc = "Go up stack frame" })
+--
+-- -- -- }}}
 
 -- plugins config {{{
 
 -- lualine cfg {{{
 
 require('lualine').setup {
-  options = {
-    icons_enabled = false,
-    theme = 'auto',
-    -- component_separators = { left = '', right = ''},
-    component_separators = { left = '', right = ''},
-    -- section_separators = { left = '', right = ''},
-    section_separators = { left = '', right = ''},
-    disabled_filetypes = {
-      statusline = {},
-      winbar = {},
+    options = {
+        icons_enabled = false,
+        theme = 'auto',
+        -- component_separators = { left = '', right = ''},
+        component_separators = { left = '', right = ''},
+        -- section_separators = { left = '', right = ''},
+        section_separators = { left = '', right = ''},
+        disabled_filetypes = {
+            statusline = {},
+            winbar = {},
+        },
+        ignore_focus = {},
+        always_divide_middle = true,
+        always_show_tabline = true,
+        globalstatus = false,
+        refresh = {
+            statusline = 1000,
+            tabline = 1000,
+            winbar = 1000,
+            refresh_time = 3,
+            events = {
+                'WinEnter',
+                'BufEnter',
+                'BufWritePost',
+                'SessionLoadPost',
+                'FileChangedShellPost',
+                'VimResized',
+                'Filetype',
+                'CursorMoved',
+                'CursorMovedI',
+                'ModeChanged',
+            },
+        }
     },
-    ignore_focus = {},
-    always_divide_middle = true,
-    always_show_tabline = true,
-    globalstatus = false,
-    refresh = {
-      statusline = 1000,
-      tabline = 1000,
-      winbar = 1000,
-      refresh_time = 3,
-      events = {
-        'WinEnter',
-        'BufEnter',
-        'BufWritePost',
-        'SessionLoadPost',
-        'FileChangedShellPost',
-        'VimResized',
-        'Filetype',
-        'CursorMoved',
-        'CursorMovedI',
-        'ModeChanged',
-      },
-    }
-  },
-  sections = {
-    lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename'},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_y = {'progress'},
-    lualine_z = {'location'}
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {'filename'},
-    lualine_x = {'location'},
-    lualine_y = {},
-    lualine_z = {}
-  },
-  tabline = {},
-  winbar = {},
-  inactive_winbar = {},
-  extensions = {}
+    sections = {
+        lualine_a = {'mode'},
+        lualine_b = {'branch', 'diff', 'diagnostics'},
+        lualine_c = {'filename'},
+        lualine_x = {'encoding', 'fileformat', 'filetype'},
+        lualine_y = {'progress'},
+        lualine_z = {'location'}
+    },
+    inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {'filename'},
+        lualine_x = {'location'},
+        lualine_y = {},
+        lualine_z = {}
+    },
+    tabline = {},
+    winbar = {},
+    inactive_winbar = {},
+    extensions = {}
 }
 
 -- }}}
@@ -113,136 +153,136 @@ require('lualine').setup {
 -- oil cfg {{{
 
     require("oil").setup({
-      default_file_explorer = true,
-      -- See :help oil-columns
-      columns = {
-        "icon",
-        -- "permissions",
-        "size",
-        "mtime",
-      },
-      buf_options = {
-        buflisted = false,
-        bufhidden = "hide",
-      },
-      win_options = {
-        wrap = false,
-        signcolumn = "no",
-        cursorcolumn = false,
-        foldcolumn = "0",
-        spell = false,
-        list = false,
-        conceallevel = 3,
-        concealcursor = "nvic",
-      },
-      delete_to_trash = true,
-      skip_confirm_for_simple_edits = false,
-      prompt_save_on_select_new_entry = true,
-      cleanup_delay_ms = 2000,
-      lsp_file_methods = {
-        enabled = true,
-        timeout_ms = 1000,
-        autosave_changes = false,
-      },
-      constrain_cursor = "editable",
-      watch_for_changes = true,
-      keymaps = {
-        ["g?"] = { "actions.show_help", mode = "n" },
-        ["<CR>"] = "actions.select",
-        ["<C-t>"] = { "actions.select", opts = { tab = true } },
-        ["<C-c>"] = { "actions.close", mode = "n" },
-        ["-"] = { "actions.parent", mode = "n" },
-        ["<Backspace>"] = { "actions.parent", mode = "n" },
-        ["_"] = { "actions.open_cwd", mode = "n" },
-        ["gs"] = { "actions.change_sort", mode = "n" },
-        ["gx"] = "actions.open_external",
-        ["g."] = { "actions.toggle_hidden", mode = "n" },
-      },
-      use_default_keymaps = false,
-      view_options = {
-        show_hidden = true,
-        is_hidden_file = function(name, bufnr)
-          local m = name:match("^%.")
-          return m ~= nil
-        end,
-        is_always_hidden = function(name, bufnr)
-          return false
-        end,
-        natural_order = "fast",
-        case_insensitive = false,
-        sort = {
-          { "type", "asc" },
-          { "name", "asc" },
+        default_file_explorer = true,
+        -- See :help oil-columns
+        columns = {
+            "icon",
+            -- "permissions",
+            "size",
+            "mtime",
         },
-        highlight_filename = function(entry, is_hidden, is_link_target, is_link_orphan)
-          return nil
-        end,
-      },
-      git = {
-        add = function(path)
-          return false
-        end,
-        mv = function(src_path, dest_path)
-          return false
-        end,
-        rm = function(path)
-          return false
-        end,
-      },
-      -- Configuration for the floating window in oil.open_float
-      float = {
-        padding = 2,
-        max_width = 0,
-        max_height = 0,
-        border = "rounded",
+        buf_options = {
+            buflisted = false,
+            bufhidden = "hide",
+        },
         win_options = {
-          winblend = 0,
+            wrap = false,
+            signcolumn = "no",
+            cursorcolumn = false,
+            foldcolumn = "0",
+            spell = false,
+            list = false,
+            conceallevel = 3,
+            concealcursor = "nvic",
         },
-        get_win_title = nil,
-        preview_split = "auto",
-        override = function(conf)
-          return conf
-        end,
-      },
-      preview_win = {
-        update_on_cursor_moved = true,
-        preview_method = "fast_scratch",
-        disable_preview = function(filename)
-          return false
-        end,
-        win_options = {},
-      },
-      confirmation = {
-        max_width = 0.9,
-        min_width = { 40, 0.4 },
-        width = nil,
-        max_height = 0.9,
-        min_height = { 5, 0.1 },
-        height = nil,
-        border = "rounded",
-        win_options = {
-          winblend = 0,
+        delete_to_trash = true,
+        skip_confirm_for_simple_edits = false,
+        prompt_save_on_select_new_entry = true,
+        cleanup_delay_ms = 2000,
+        lsp_file_methods = {
+            enabled = true,
+            timeout_ms = 1000,
+            autosave_changes = false,
         },
-      },
-      progress = {
-        max_width = 0.9,
-        min_width = { 40, 0.4 },
-        width = nil,
-        max_height = { 10, 0.9 },
-        min_height = { 5, 0.1 },
-        height = nil,
-        border = "rounded",
-        minimized_border = "none",
-        win_options = {
-          winblend = 0,
+        constrain_cursor = "editable",
+        watch_for_changes = true,
+        keymaps = {
+            ["g?"] = { "actions.show_help", mode = "n" },
+            ["<CR>"] = "actions.select",
+            -- ["<C-t>"] = { "actions.select", opts = { tab = true } },
+            ["<C-c>"] = { "actions.close", mode = "n" },
+            ["-"] = { "actions.parent", mode = "n" },
+            ["<Backspace>"] = { "actions.parent", mode = "n" },
+            ["_"] = { "actions.open_cwd", mode = "n" },
+            ["gs"] = { "actions.change_sort", mode = "n" },
+            ["gx"] = "actions.open_external",
+            ["g."] = { "actions.toggle_hidden", mode = "n" },
         },
-      },
-      ssh = {
-        border = "rounded",
-      },
-      keymaps_help = {
-        border = "rounded",
-      },
+        use_default_keymaps = false,
+        view_options = {
+            show_hidden = true,
+            is_hidden_file = function(name, bufnr)
+                local m = name:match("^%.")
+                return m ~= nil
+            end,
+            is_always_hidden = function(name, bufnr)
+                return false
+            end,
+            natural_order = "fast",
+            case_insensitive = false,
+            sort = {
+                { "type", "asc" },
+                { "name", "asc" },
+            },
+            highlight_filename = function(entry, is_hidden, is_link_target, is_link_orphan)
+                return nil
+            end,
+        },
+        git = {
+            add = function(path)
+                return false
+            end,
+            mv = function(src_path, dest_path)
+                return false
+            end,
+            rm = function(path)
+                return false
+            end,
+        },
+        -- Configuration for the floating window in oil.open_float
+        float = {
+            padding = 2,
+            max_width = 0,
+            max_height = 0,
+            border = "rounded",
+            win_options = {
+                winblend = 0,
+            },
+            get_win_title = nil,
+            preview_split = "auto",
+            override = function(conf)
+                return conf
+            end,
+        },
+        preview_win = {
+            update_on_cursor_moved = true,
+            preview_method = "fast_scratch",
+            disable_preview = function(filename)
+                return false
+            end,
+            win_options = {},
+        },
+        confirmation = {
+            max_width = 0.9,
+            min_width = { 40, 0.4 },
+            width = nil,
+            max_height = 0.9,
+            min_height = { 5, 0.1 },
+            height = nil,
+            border = "rounded",
+            win_options = {
+                winblend = 0,
+            },
+        },
+        progress = {
+            max_width = 0.9,
+            min_width = { 40, 0.4 },
+            width = nil,
+            max_height = { 10, 0.9 },
+            min_height = { 5, 0.1 },
+            height = nil,
+            border = "rounded",
+            minimized_border = "none",
+            win_options = {
+                winblend = 0,
+            },
+        },
+        ssh = {
+            border = "rounded",
+        },
+        keymaps_help = {
+            border = "rounded",
+        },
     })
 
 -- }}}
@@ -401,6 +441,8 @@ vim.keymap.set( -- escape in terminal mode
     "<Esc>",
     "<C-\\><C-n>"
 )
+
+vim.keymap.set("n", "<leader>tw", ":Twilight<enter>")
 
 vim.keymap.set("n", "<leader>rl", "<cmd>source ~/.config/nvim/init.lua<cr>")
 
