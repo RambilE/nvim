@@ -1,0 +1,7 @@
+deplistPacman=(neovim)
+
+provides=(init.lua:$HOME/.config/nvim/init.lua)
+
+SETUP() {
+:
+}
