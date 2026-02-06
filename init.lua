@@ -20,7 +20,7 @@ local add = MiniDeps.add
 
 -- }}}
 
--- plugins {{{  
+-- plugins {{{
 
     add({source = "catppuccin/nvim" })
     add({source = "nvim-lualine/lualine.nvim"})
@@ -30,13 +30,20 @@ local add = MiniDeps.add
     add({source = "mason-org/mason.nvim"})
     add({source = "mason-org/mason-lspconfig.nvim"})
     add({source = "norcalli/nvim-colorizer.lua"})
+    add({source = "brenoprata10/nvim-highlight-colors"})
     add({source = "mrjones2014/smart-splits.nvim"})
+    add({source = "hrsh7th/nvim-cmp"})
+    add({source = "hrsh7th/cmp-nvim-lsp"})
+    add({source = "hrsh7th/cmp-path"})
+    add({source = "hrsh7th/cmp-buffer"})
 
     require("mason").setup()
     require("mason-lspconfig").setup()
-    require("mini.completion").setup()
     require("mini.indentscope").setup()
     require("mini.icons").setup()
+    require("mini.snippets").setup()
+    require("mini.pairs").setup()
+    require("mini.starter").setup()
 
 -- }}}
 
@@ -240,6 +247,123 @@ require('lualine').setup {
 
 -- }}}
 
+-- nvim-cmp cfg {{{
+    local cmp = require'cmp'
+
+    cmp.setup({
+        snippet = {
+            expand = function(args)
+                -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+                -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+                -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+                -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+                -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+
+                -- For `mini.snippets` users:
+                local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
+                insert({ body = args.body }) -- Insert at cursor
+                cmp.resubscribe({ "TextChangedI", "TextChangedP" })
+                require("cmp.config").set_onetime({ sources = {} })
+            end,
+        },
+        window = {
+            -- completion = cmp.config.window.bordered(),
+            -- documentation = cmp.config.window.bordered(),
+        },
+        formatting = {
+                format = require("nvim-highlight-colors").format
+        },
+        mapping = cmp.mapping.preset.insert({
+            ["<CR>"] = cmp.mapping.confirm({ select = false }),
+            ["<C-e>"] = cmp.mapping.abort(),
+            ["<C-Space>"] = cmp.mapping.complete(),
+            ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+            ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+            ["<C-f>"] = cmp.mapping.scroll_docs(4),
+            ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+            ["<Tab>"] = cmp.mapping(function(fallback)
+                if cmp.visible() then cmp.select_next_item() else fallback() end
+            end, { "i", "s" }),
+            ["<S-Tab>"] = cmp.mapping(function()
+                if cmp.visible() then cmp.select_prev_item() end
+            end, { "i", "s" }),
+        }),
+        sources = cmp.config.sources({
+            { name = 'nvim_lsp' },
+            -- { name = 'vsnip' }, -- For vsnip users.
+            -- { name = 'luasnip' }, -- For luasnip users.
+            -- { name = 'ultisnips' }, -- For ultisnips users.
+            -- { name = 'snippy' }, -- For snippy users.
+        }, {
+            { name = 'buffer' },
+        })
+    })
+
+    -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
+    -- Set configuration for specific filetype.
+    --[[ cmp.setup.filetype('gitcommit', {
+        sources = cmp.config.sources({
+            { name = 'git' },
+        }, {
+            { name = 'buffer' },
+        })
+    })
+    require("cmp_git").setup() ]]--
+
+    -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+    cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+            { name = 'buffer' }
+        }
+    })
+
+    -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+    cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+            { name = 'path' }
+        }, {
+            { name = 'cmdline' }
+        }),
+        matching = { disallow_symbol_nonprefix_matching = false }
+    })
+-- }}}
+
+-- highlight colors cfg {{{
+    require("nvim-highlight-colors").setup {
+        ---@usage 'background'|'foreground'|'virtual'
+        render = 'virtual',
+
+        ---Set virtual symbol (requires render to be set to 'virtual')
+        virtual_symbol = '',
+
+        ---Set virtual symbol suffix (defaults to '')
+        virtual_symbol_prefix = '',
+
+        ---Set virtual symbol suffix (defaults to ' ')
+        virtual_symbol_suffix = ' ',
+
+        ---@usage 'inline'|'eol'|'eow'
+        ---inline mimics VS Code style
+        ---eol stands for `end of column` - Recommended to set `virtual_symbol_suffix = ''` when used.
+        ---eow stands for `end of word` - Recommended to set `virtual_symbol_prefix = ' ' and virtual_symbol_suffix = ''` when used.
+        virtual_symbol_position = 'inline',
+
+        enable_hex = true,
+        enable_short_hex = true,
+        enable_rgb = true,
+        enable_hsl = true,
+        enable_ansi = true,
+        enable_xterm256 = true,
+        enable_xtermTrueColor = true,
+        enable_hsl_without_function = true,
+        enable_var_usage = true,
+        enable_named_colors = true,
+        enable_tailwind = false,
+}
+-- }}}
+
 -- }}}
 
 -- opts {{{
@@ -257,6 +381,7 @@ vim.o.expandtab = true
 vim.o.termguicolors = true
 vim.o.foldmethod = "marker"
 vim.o.lmap = "йЙцЦуУкКеЕнНгГшШщЩзЗхХъЪфФыЫвВаАпПрРоОлЛдДжЖэЭяЯчЧсСмМиИтТьЬбБюЮ.\\,;qQwWeErRtTyYuUiIoOpP[{]}aAsSdDfFgGhHjJkKlL;:'\"zZxXcCvVbBnNmM\\,<.>/?"
+vim.o.undofile = true
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.cmd('packadd! nohlsearch')
@@ -277,6 +402,13 @@ vim.keymap.set( -- escape in terminal mode
     "<C-\\><C-n>"
 )
 
+vim.keymap.set("n", "<leader>rl", "<cmd>source ~/.config/nvim/init.lua<cr>")
+
+vim.keymap.set("n", "n", "nzzzv") -- center screen when looping search results
+vim.keymap.set("n", "N", "Nzzzv")
+
+vim.keymap.set("n", "Q", "<nop>")
+
 -- resizing splits
 vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
 vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
@@ -296,7 +428,7 @@ vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
 
 -- }}}
 
--- etc {{{ 
+-- etc {{{
 
 vim.api.nvim_create_autocmd('UIEnter', {
   callback = function()
