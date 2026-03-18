@@ -31,10 +31,15 @@ local add = MiniDeps.add
     add({source = "norcalli/nvim-colorizer.lua"})
     add({source = "brenoprata10/nvim-highlight-colors"})
     add({source = "mrjones2014/smart-splits.nvim"})
-    add({source = "hrsh7th/nvim-cmp"})
-    add({source = "hrsh7th/cmp-nvim-lsp"})
-    add({source = "hrsh7th/cmp-path"})
-    add({source = "hrsh7th/cmp-buffer"})
+
+    -- add({source = "hrsh7th/nvim-cmp"})
+    -- add({source = "hrsh7th/cmp-nvim-lsp"})
+    -- add({source = "hrsh7th/cmp-path"})
+    -- add({source = "hrsh7th/cmp-buffer"})
+    -- add({source = "hrsh7th/cmp-cmdline"})
+    -- add({source = "L3MON4D3/LuaSnip"})
+    -- add({source = "saadparwaiz1/cmp_luasnip"})
+
     add({source = "sphamba/smear-cursor.nvim"})
     add({source = "rachartier/tiny-glimmer.nvim"})
     add({source = "VidocqH/auto-indent.nvim"})
@@ -44,6 +49,9 @@ local add = MiniDeps.add
          depends = {"MunifTanjim/nui.nvim",
                     "nvim-lua/plenary.nvim"}})
     add({source = "folke/trouble.nvim"})
+    add({source = "romgrk/barbar.nvim",
+         depends = {"nvim-tree/nvim-web-devicons"}})
+
 
     require("mason").setup()
     require("mason-lspconfig").setup()
@@ -292,88 +300,88 @@ require('lualine').setup {
 
 -- }}}
 
--- nvim-cmp cfg {{{
-    local cmp = require'cmp'
-
-    cmp.setup({
-        snippet = {
-            expand = function(args)
-                -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-                -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-                -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-                -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-                -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
-
-                -- For `mini.snippets` users:
-                local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
-                insert({ body = args.body }) -- Insert at cursor
-                cmp.resubscribe({ "TextChangedI", "TextChangedP" })
-                require("cmp.config").set_onetime({ sources = {} })
-            end,
-        },
-        window = {
-            -- completion = cmp.config.window.bordered(),
-            -- documentation = cmp.config.window.bordered(),
-        },
-        formatting = {
-                format = require("nvim-highlight-colors").format
-        },
-        mapping = cmp.mapping.preset.insert({
-            ["<CR>"] = cmp.mapping.confirm({ select = false }),
-            ["<C-e>"] = cmp.mapping.abort(),
-            ["<C-Space>"] = cmp.mapping.complete(),
-            ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-            ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-            ["<C-f>"] = cmp.mapping.scroll_docs(4),
-            ["<C-u>"] = cmp.mapping.scroll_docs(-4),
-            ["<Tab>"] = cmp.mapping(function(fallback)
-                if cmp.visible() then cmp.select_next_item() else fallback() end
-            end, { "i", "s" }),
-            ["<S-Tab>"] = cmp.mapping(function()
-                if cmp.visible() then cmp.select_prev_item() end
-            end, { "i", "s" }),
-        }),
-        sources = cmp.config.sources({
-            { name = 'nvim_lsp' },
-            -- { name = 'vsnip' }, -- For vsnip users.
-            -- { name = 'luasnip' }, -- For luasnip users.
-            -- { name = 'ultisnips' }, -- For ultisnips users.
-            -- { name = 'snippy' }, -- For snippy users.
-        }, {
-            { name = 'buffer' },
-        })
-    })
-
-    -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
-    -- Set configuration for specific filetype.
-    --[[ cmp.setup.filetype('gitcommit', {
-        sources = cmp.config.sources({
-            { name = 'git' },
-        }, {
-            { name = 'buffer' },
-        })
-    })
-    require("cmp_git").setup() ]]--
-
-    -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-    cmp.setup.cmdline({ '/', '?' }, {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-            { name = 'buffer' }
-        }
-    })
-
-    -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-    cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-            { name = 'path' }
-        }, {
-            { name = 'cmdline' }
-        }),
-        matching = { disallow_symbol_nonprefix_matching = false }
-    })
--- }}}
+-- -- nvim-cmp cfg {{{
+--     local cmp = require'cmp'
+--
+--     cmp.setup({
+--         snippet = {
+--             expand = function(args)
+--                 -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+--                 require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+--                 -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+--                 -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+--                 -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+--
+--                 -- For `mini.snippets` users:
+--                 -- local insert = MiniSnippets.config.expand.insert or MiniSnippets.default_insert
+--                 -- insert({ body = args.body }) -- Insert at cursor
+--                 -- cmp.resubscribe({ "TextChangedI", "TextChangedP" })
+--                 -- require("cmp.config").set_onetime({ sources = {} })
+--             end,
+--         },
+--         window = {
+--             -- completion = cmp.config.window.bordered(),
+--             -- documentation = cmp.config.window.bordered(),
+--         },
+--         formatting = {
+--                 format = require("nvim-highlight-colors").format
+--         },
+--         mapping = cmp.mapping.preset.insert({
+--             ["<CR>"] = cmp.mapping.confirm({ select = false }),
+--             ["<C-e>"] = cmp.mapping.abort(),
+--             ["<C-Space>"] = cmp.mapping.complete(),
+--             ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+--             ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+--             ["<C-f>"] = cmp.mapping.scroll_docs(4),
+--             ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+--             ["<Tab>"] = cmp.mapping(function(fallback)
+--                 if cmp.visible() then cmp.select_next_item() else fallback() end
+--             end, { "i", "s" }),
+--             ["<S-Tab>"] = cmp.mapping(function()
+--                 if cmp.visible() then cmp.select_prev_item() end
+--             end, { "i", "s" }),
+--         }),
+--         sources = cmp.config.sources({
+--             { name = 'nvim_lsp' },
+--             -- { name = 'vsnip' }, -- For vsnip users.
+--             { name = 'luasnip' }, -- For luasnip users.
+--             -- { name = 'ultisnips' }, -- For ultisnips users.
+--             -- { name = 'snippy' }, -- For snippy users.
+--         }, {
+--             { name = 'buffer' },
+--         })
+--     })
+--
+--     -- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
+--     -- Set configuration for specific filetype.
+--     --[[ cmp.setup.filetype('gitcommit', {
+--         sources = cmp.config.sources({
+--             { name = 'git' },
+--         }, {
+--             { name = 'buffer' },
+--         })
+--     })
+--     require("cmp_git").setup() ]]--
+--
+--     -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+--     cmp.setup.cmdline({ '/', '?' }, {
+--         mapping = cmp.mapping.preset.cmdline(),
+--         sources = {
+--             { name = 'buffer' }
+--         }
+--     })
+--
+--     -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+--     cmp.setup.cmdline(':', {
+--         mapping = cmp.mapping.preset.cmdline(),
+--         sources = cmp.config.sources({
+--             { name = 'path' }
+--         }, {
+--             { name = 'cmdline' }
+--         }),
+--         matching = { disallow_symbol_nonprefix_matching = false }
+--     })
+-- -- }}}
 
 -- highlight colors cfg {{{
     require("nvim-highlight-colors").setup {
@@ -762,6 +770,68 @@ require("neo-tree").setup({
 })
 -- }}}
 
+-- blink cfg {{{
+
+-- add({
+--     source = "saghen/blink.cmp",
+--     depends = { "rafamadriz/friendly-snippets" },
+--     checkout = "v1.9.1",
+-- })
+
+local function build_blink(params)
+  vim.notify('Building blink.cmp', vim.log.levels.INFO)
+  local obj = vim.system({ 'cargo', 'build', '--release' }, { cwd = params.path }):wait()
+  if obj.code == 0 then
+    vim.notify('Building blink.cmp done', vim.log.levels.INFO)
+  else
+    vim.notify('Building blink.cmp failed', vim.log.levels.ERROR)
+  end
+end
+
+add({
+  source = 'Saghen/blink.cmp',
+  hooks = {
+    post_install = build_blink,
+    post_checkout = build_blink,
+  },
+})
+
+add({source = "rafamadriz/friendly-snippets"})
+
+require('blink.cmp').setup({
+    appearance = {
+        nerd_font_variant = 'mono'
+    },
+
+    completion = {
+        documentation = { auto_show = true }
+    },
+
+    sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+    },
+
+    fuzzy = {
+        implementation = "prefer_rust_with_warning"
+    },
+
+    keymap = {
+        -- set to 'none' to disable the 'default' preset
+        preset = 'none',
+
+        ['k'] = { 'select_prev', 'fallback' },
+        ['j'] = { 'select_next', 'fallback' },
+        ['<tab>'] = { 'accept', 'fallback' },
+        -- ['<S-Tab>'] = { 'select_prev', 'fallback' },
+        -- ['<Tab>'] = { 'select_next', 'fallback' },
+        -- ['<CR>'] = { 'accept', 'fallback' },
+        -- ['<C-n>'] = { 'snippet_forward', 'fallback' },
+        -- ['<C-p>'] = { 'snippet_backward', 'fallback' },
+        -- ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+    }
+})
+-- }}}
+
 -- }}}
 
 -- opts {{{
@@ -777,6 +847,7 @@ vim.o.softtabstop = 4
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
 vim.o.termguicolors = true
+vim.o.signcolumn = "yes"
 vim.o.foldmethod = "marker"
 vim.o.lmap = "йЙцЦуУкКеЕнНгГшШщЩзЗхХъЪфФыЫвВаАпПрРоОлЛдДжЖэЭяЯчЧсСмМиИтТьЬбБюЮ.\\,;qQwWeErRtTyYuUiIoOpP[{]}aAsSdDfFgGhHjJkKlL;:'\"zZxXcCvVbBnNmM\\,<.>/?"
 vim.o.undofile = true
@@ -805,13 +876,18 @@ vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>")
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree<cr>")
 vim.keymap.set("n", "<leader>te", "<cmd>Neotree toggle<cr>")
 
-vim.keymap.set("n", "<C-tab>", "<cmd>tabnext<cr>")
-vim.keymap.set("n", "<C-S-tab>", "<cmd>tabprev<cr>")
+vim.keymap.set("n", "<C-tab>", "<cmd>BufferNext<cr>")
+vim.keymap.set("n", "<C-S-tab>", "<cmd>BufferPrevious<cr>")
+vim.keymap.set("n", "<C-w>", "<cmd>BufferClose<cr>")
+vim.keymap.set("n", "<C-t>", "<cmd>tabnew<cr>")
 
 vim.keymap.set("n", "<leader>rl", "<cmd>source ~/.config/nvim/init.lua<cr>")
 
 vim.keymap.set("n", "n", "nzzzv") -- center screen when looping search results
 vim.keymap.set("n", "N", "Nzzzv")
+
+vim.keymap.set("n", "<leader>v", "<cmd>set ve=all<cr>")
+vim.keymap.set("n", "<leader>V", "<cmd>set ve=none<cr>")
 
 vim.keymap.set("n", "Q", "<nop>")
 
@@ -874,13 +950,18 @@ vim.lsp.config('lua_ls', {
       },
       workspace = {
         library = {
-          vim.fn.expand'~/.config/nvim/glua-api-snippets',
-          '/usr/share/lua/5.3'
+          -- vim.fn.expand'~/.config/nvim/glua-api-snippets',
+          '/usr/share/lua/5.3',
+          "${3rd}/love2d/library"
         }
       }
     }
   }
 })
 -- }}}
+
+vim.lsp.config('qmlls', {
+  cmd = {"qmlls6", "-E"}
+})
 
 -- }}}
