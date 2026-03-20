@@ -20,7 +20,7 @@ local add = MiniDeps.add
 
 -- }}}
 
--- plugins {{{
+-- plugins cr{{{
 
     add({source = "nvim-lualine/lualine.nvim"})
     add({source = "stevearc/oil.nvim",
@@ -60,7 +60,7 @@ local add = MiniDeps.add
     })
     require("trouble").setup()
     require("mini.icons").setup()
-    require("mini.snippets").setup()
+    -- require("mini.snippets").setup()
     require("mini.pairs").setup()
     require("mini.starter").setup()
     require("mini.comment").setup()
@@ -386,7 +386,7 @@ require('lualine').setup {
 -- highlight colors cfg {{{
     require("nvim-highlight-colors").setup {
         ---@usage 'background'|'foreground'|'virtual'
-        render = 'virtual',
+        render = 'background',
 
         ---Set virtual symbol (requires render to be set to 'virtual')
         virtual_symbol = '',
@@ -819,9 +819,10 @@ require('blink.cmp').setup({
         -- set to 'none' to disable the 'default' preset
         preset = 'none',
 
-        ['k'] = { 'select_prev', 'fallback' },
-        ['j'] = { 'select_next', 'fallback' },
+        ['<A-k>'] = { 'select_prev', 'fallback' },
+        ['<A-j>'] = { 'select_next', 'fallback' },
         ['<tab>'] = { 'accept', 'fallback' },
+        ['<enter>'] = { 'accept', 'fallback' },
         -- ['<S-Tab>'] = { 'select_prev', 'fallback' },
         -- ['<Tab>'] = { 'select_next', 'fallback' },
         -- ['<CR>'] = { 'accept', 'fallback' },
