@@ -20,7 +20,7 @@ local add = MiniDeps.add
 
 -- }}}
 
--- plugins cr{{{
+-- plugins {{{
 
     add({source = "nvim-lualine/lualine.nvim"})
     add({source = "stevearc/oil.nvim",
@@ -31,14 +31,7 @@ local add = MiniDeps.add
     add({source = "norcalli/nvim-colorizer.lua"})
     add({source = "brenoprata10/nvim-highlight-colors"})
     add({source = "mrjones2014/smart-splits.nvim"})
-
-    -- add({source = "hrsh7th/nvim-cmp"})
-    -- add({source = "hrsh7th/cmp-nvim-lsp"})
-    -- add({source = "hrsh7th/cmp-path"})
-    -- add({source = "hrsh7th/cmp-buffer"})
-    -- add({source = "hrsh7th/cmp-cmdline"})
-    -- add({source = "L3MON4D3/LuaSnip"})
-    -- add({source = "saadparwaiz1/cmp_luasnip"})
+    add({source = "altermo/ultimate-autopair.nvim"})
 
     add({source = "sphamba/smear-cursor.nvim"})
     add({source = "rachartier/tiny-glimmer.nvim"})
@@ -53,6 +46,7 @@ local add = MiniDeps.add
          depends = {"nvim-tree/nvim-web-devicons"}})
 
 
+    require("ultimate-autopair").setup()
     require("mason").setup()
     require("mason-lspconfig").setup()
     require("mini.indentscope").setup({
@@ -60,8 +54,6 @@ local add = MiniDeps.add
     })
     require("trouble").setup()
     require("mini.icons").setup()
-    -- require("mini.snippets").setup()
-    require("mini.pairs").setup()
     require("mini.starter").setup()
     require("mini.comment").setup()
     require("mini.notify").setup()
